@@ -6,6 +6,12 @@
 #define EARTH_STATION_ADDRESS 4
 
 static const int SDN = 10;
+static const double stationsLat = -33.458155;
+static const double stationsLng = -70.661971;
+static const double stationsAlt = 548.0;
+static const double deg2rad = 0.0174532925199433; //PI/180;
+static const double rad2deg = 57.295779513082321; //180/PI;
+static const double cos_stationsLat = 0.834289; //cos(stationsLat * deg2rad);
 uint8_t hh;
 uint8_t mm;
 uint8_t ss;
@@ -19,6 +25,13 @@ double lng_dbl;
 double alt_dbl;
 double crse_dbl;
 double spd_dbl;
+
+double dlat;
+double dlon;
+double gnd_dist;
+double haversin_dlat;
+double haversin_dlon;
+double a, c, d, az;
 
 // Singleton instance of the radio driver
 RH_RF22 driver(4,2);
@@ -149,4 +162,30 @@ void displayInfo() {
   
   Serial.print(F("   Satellites: ")); 
   Serial.println(sat);
+}
+
+double azimuth(double lat2, double lon2) {
+    dlat = (lat2 - stationsLat) * deg2rad;
+    dlon = (lon2 - stationsLng) * deg2rad; 
+    az = atan2(dlon, dlat) * rad2deg;
+    if(az < 0) {
+        az = 360 + az;
+    }
+    return az;
+}
+
+double elevation(double lat2, double lon2, double alt) {
+    gnd_dist = coord_dist(lat2, lon2);
+    return atan((alt - stationsAlt) / gnd_dist) * rad2deg;
+}
+
+double coord_dist(double lat2, double lon2) {
+    dlat = (lat2 - stationsLat) * deg2rad;
+    dlon = (lon2 - stationsLng) * deg2rad;
+    haversin_dlat = sin(dlat / 2.0);
+    haversin_dlon = sin(dlon / 2.0);
+    a = haversin_dlat * haversin_dlat + cos_stationsLat * cos(lat2 * deg2rad) * haversin_dlon * haversin_dlon;
+    c = 2 * atan2(sqrt(a), sqrt(1 - a));
+    d = 6371 * c;
+    return d *1000;
 }
