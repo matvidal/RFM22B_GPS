@@ -35,25 +35,25 @@ TinyGPSPlus gps;
  * y el CRC.
  */
 void setup() {
-    SerialUSB.begin(115200);
+    Serial.begin(115200);
     Serial2.begin(GPSBaud);
     pinMode(SDN, OUTPUT);
     digitalWrite(SDN, LOW);
     delay(2000);
     if (!rf22.init()) {
-        SerialUSB.println(F("Initialization failed"));
+        Serial.println(F("Initialization failed"));
     }
-    SerialUSB.println(F("GPS telemetry transmitter"));
+    Serial.println(F("GPS telemetry transmitter"));
     driver.setCRCPolynomial(driver.CRC_CCITT);
     driver.setHeaderFlags(0x7E); 
     driver.setFrequency(437.225, 0.05); 
     driver.setTxPower(RH_RF22_TXPOW_20DBM);
     if (!driver.setModemConfig(driver.GFSK_Rb2Fd5)) {
-        SerialUSB.println(F("Configuration error"));    
+        Serial.println(F("Configuration error"));    
     }
     rf22.setRetries(3);
-    SerialUSB.println(F("Set Tx Power = RH_RF22_TXPOW_20DB"));
-    SerialUSB.println(F("Set configuration = GFSK_Rb2Fd5"));  
+    Serial.println(F("Set Tx Power = RH_RF22_TXPOW_20DB"));
+    Serial.println(F("Set configuration = GFSK_Rb2Fd5"));  
 } 
     
 void loop() { 
@@ -64,7 +64,7 @@ void loop() {
         }
     }
     if (millis() > 5000 && gps.charsProcessed() < 10) {
-        SerialUSB.println(F("No GPS detected: check wiring."));
+        Serial.println(F("No GPS detected: check wiring."));
     }
 }
 /**
@@ -75,11 +75,11 @@ void loop() {
  */
 void enviar(uint8_t data[], int data_size) {
     if (!rf22.sendtoWait(data, data_size, OMNI_ARDUINO_ADDRESS))
-        SerialUSB.println(F("sendtoWait failed (Omnidirectional arduino)"));
+        Serial.println(F("sendtoWait failed (Omnidirectional arduino)"));
     if (!rf22.sendtoWait(data, data_size, YAGI_ARDUINO_ADDRESS))
-        SerialUSB.println(F("sendtoWait failed (Yagi arduino)"));
+        Serial.println(F("sendtoWait failed (Yagi arduino)"));
     if (!rf22.sendtoWait(data, data_size, EARTH_STATION_ADDRESS))
-        SerialUSB.println(F("sendtoWait failed (Earth station)"));
+        Serial.println(F("sendtoWait failed (Earth station)"));
 }
 /**
  * Se espera que llege un mensaje con esta direccion de parte
@@ -89,9 +89,9 @@ void recibir() {
     if (rf22.available()) {
         len = sizeof(buf);
         if (rf22.recvfromAck(buf, &len, &from)) {
-            SerialUSB.print("\n");
+            Serial.print("\n");
             if (!rf22.sendtoWait(buf, len, from)) {
-                SerialUSB.println(F("sendtoWait failed"));
+                Serial.println(F("sendtoWait failed"));
             }
         }
     }

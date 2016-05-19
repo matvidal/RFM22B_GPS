@@ -14,7 +14,7 @@ RHReliableDatagram rf22(driver, CLIENT_ADDRESS);
 
 uint8_t data[RH_RF22_MAX_MESSAGE_LEN];
 uint8_t buf[RH_RF22_MAX_MESSAGE_LEN]; 
-uint8_t randomData[10][255];
+uint8_t randomData[10][256];
 int i, j, k, counter, aciertos, msn_size, aciertosTotales, msgsTotales;
 
 /**
