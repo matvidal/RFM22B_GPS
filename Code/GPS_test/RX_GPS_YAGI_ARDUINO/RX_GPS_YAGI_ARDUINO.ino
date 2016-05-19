@@ -5,7 +5,7 @@
 #define RADIOSONDE_ADDRESS 1
 #define YAGI_ARDUINO_ADDRESS 3
 
-static const int SDN = 10;
+static const int SDN = 3;
 uint8_t hh;
 uint8_t mm;
 uint8_t ss;
@@ -31,7 +31,7 @@ RHReliableDatagram rf22(driver, YAGI_ARDUINO_ADDRESS);
  */
 void setup() {
     Serial.begin(115200);
-    delay(2000);
+    delay(1500);
     pinMode(SDN, OUTPUT);
     digitalWrite(SDN, LOW);
     if (!rf22.init()) {
@@ -72,81 +72,81 @@ void recibir() {
  *  altitude, course, speed, time and the number of satellites detected).
  */
 void decodePacket() {
-  tmp = packet[0];
-  tmp = (tmp << 8) + packet[1];
-  tmp = (tmp << 8) + packet[2];
-  tmp = (tmp << 8) + packet[3];
-  lat_dbl = tmp/1000000.0;
+    tmp = packet[0];
+    tmp = (tmp << 8) + packet[1];
+    tmp = (tmp << 8) + packet[2];
+    tmp = (tmp << 8) + packet[3];
+    lat_dbl = tmp/1000000.0;
   
-  tmp = packet[4];
-  tmp = (tmp << 8) + packet[5];
-  tmp = (tmp << 8) + packet[6];
-  tmp = (tmp << 8) + packet[7];
-  lng_dbl = tmp/1000000.0;
+    tmp = packet[4];
+    tmp = (tmp << 8) + packet[5];
+    tmp = (tmp << 8) + packet[6];
+    tmp = (tmp << 8) + packet[7];
+    lng_dbl = tmp/1000000.0;
   
-  tmp = packet[8];
-  tmp = (tmp << 8) + packet[9];
-  tmp = (tmp << 8) + packet[10];
-  tmp = (tmp << 8) + packet[11];
-  alt_dbl = tmp/1000.0;
+    tmp = packet[8];
+    tmp = (tmp << 8) + packet[9];
+    tmp = (tmp << 8) + packet[10];
+    tmp = (tmp << 8) + packet[11];
+    alt_dbl = tmp/1000.0;
 
-  tmp = packet[12];
-  tmp = (tmp << 8) + packet[13];
-  tmp = (tmp << 8) + packet[14];
-  tmp = (tmp << 8) + packet[15];
-  crse_dbl = tmp/1000.0;
+    tmp = packet[12];
+    tmp = (tmp << 8) + packet[13];
+    tmp = (tmp << 8) + packet[14];
+    tmp = (tmp << 8) + packet[15];
+    crse_dbl = tmp/1000.0;
 
-  tmp = packet[16];
-  tmp = (tmp << 8) + packet[17];
-  tmp = (tmp << 8) + packet[18];
-  tmp = (tmp << 8) + packet[19];
-  spd_dbl = tmp/1000.0;
+    tmp = packet[16];
+    tmp = (tmp << 8) + packet[17];
+    tmp = (tmp << 8) + packet[18];
+    tmp = (tmp << 8) + packet[19];
+    spd_dbl = tmp/1000.0;
 
-  hh = packet[20];
-  mm = packet[21];
-  ss = packet[22];
+    hh = packet[20];
+    mm = packet[21];
+    ss = packet[22];
 
-  sat = packet[23];
-  sat = (sat << 8) + packet[24];
-  sat = (sat << 8) + packet[25];
-  sat = (sat << 8) + packet[26];
+    sat = packet[23];
+    sat = (sat << 8) + packet[24];
+    sat = (sat << 8) + packet[25];
+    sat = (sat << 8) + packet[26];
 }
 /**
  * Displays the data in a comprehensible way.
  */
 void displayInfo() {
-  Serial.print(F("Location: ")); 
-  Serial.print(lat_dbl, 6);
-  Serial.print(F(","));
-  Serial.print(lng_dbl, 6);
+    Serial.print(F("Location: ")); 
+    Serial.print(lat_dbl, 6);
+    Serial.print(F(","));
+    Serial.print(lng_dbl, 6);
 
-  Serial.print(F("   Altitude(GPS): ")); 
-  Serial.print(alt_dbl);
-  Serial.print(F(" [m]"));
+    Serial.print(F("   Altitude(GPS): ")); 
+    Serial.print(alt_dbl);
+    Serial.print(F(" [m]"));
 
-  Serial.print(F("   Course: ")); 
-  Serial.print(crse_dbl);
+    Serial.print(F("   Course: ")); 
+    Serial.print(crse_dbl);
 
-  Serial.print(F("   Speed: ")); 
-  Serial.print(spd_dbl);
-  Serial.print(F(" [mph]"));
+    Serial.print(F("   Speed: ")); 
+    Serial.print(spd_dbl);
+    Serial.print(F(" [mph]"));
 
-  Serial.print(F("   Time: "));
-  if (hh < 10) {
-    Serial.print(F("0"));
-  }
-  Serial.print(hh);
-  Serial.print(F(":"));
-  if (mm < 10) {
-    Serial.print(F("0"));
-  }
-  Serial.print(mm);
-  Serial.print(F(":"));
-  if (ss < 10) {
-    Serial.print(F("0"));
-  }
-  Serial.print(ss);
+    Serial.print(F("   Time: "));
+    if (hh < 10) {
+        Serial.print(F("0"));
+    }
+    Serial.print(hh);
+    Serial.print(F(":"));
+    if (mm < 10) {
+        Serial.print(F("0"));
+    }
+    Serial.print(mm);
+    Serial.print(F(":"));
+    if (ss < 10) {
+        Serial.print(F("0"));
+    }
+    Serial.print(ss);
   
-  Serial.print(F("   Satellites: ")); 
-  Serial.println(sat);
+    Serial.print(F("   Satellites: ")); 
+    Serial.println(sat);
 }
