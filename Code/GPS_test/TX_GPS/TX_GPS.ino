@@ -31,8 +31,8 @@ RHReliableDatagram rf22(driver, RADIOSONDE_ADDRESS);
 TinyGPSPlus gps;
 
 /**
- * The serial communication, the transceiver and the GPS comunication parameters
- * are initialized.
+ * The serial communication, the transceiver and the GPS comunication are 
+ * initialized and their parameters are set.
  */
 void setup() {
     Serial.begin(115200);
