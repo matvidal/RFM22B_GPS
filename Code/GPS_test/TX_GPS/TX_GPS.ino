@@ -31,15 +31,15 @@ RHReliableDatagram rf22(driver, RADIOSONDE_ADDRESS);
 TinyGPSPlus gps;
 
 /**
- * Se inicializa el transceiver y se selecciona el flag, la frecuencia,
- * y el CRC.
+ * The serial communication, the transceiver and the GPS comunication parameters
+ * are initialized.
  */
 void setup() {
     Serial.begin(115200);
     Serial2.begin(GPSBaud);
     pinMode(SDN, OUTPUT);
     digitalWrite(SDN, LOW);
-    delay(2000);
+    delay(1500);
     if (!rf22.init()) {
         Serial.println(F("Initialization failed"));
     }
@@ -60,7 +60,7 @@ void loop() {
     while (Serial2.available() > 0) {
         if (gps.encode(Serial2.read())) {
             encodePacket();
-            enviar(packet, sizeof(packet));
+            sendPacket(packet, sizeof(packet));
         }
     }
     if (millis() > 5000 && gps.charsProcessed() < 10) {
@@ -68,12 +68,11 @@ void loop() {
     }
 }
 /**
- * Esta funcion envia un paquete al servidor y luego espera una
- * confirmacion, si no llega imprime un error en pantalla.
- * @param data[] Datos enviados al servidor.
- * @param data_size Tamano del paquete enviado.
+ * This function sends the information of the GPS for each of the three 
+ * receivers and waits for an acknowledgement, if it does not arrive, an error
+ * is printed on screen.
  */
-void enviar(uint8_t data[], int data_size) {
+void sendPacket(uint8_t data[], int data_size) {
     if (!rf22.sendtoWait(data, data_size, OMNI_ARDUINO_ADDRESS))
         Serial.println(F("sendtoWait failed (Omnidirectional arduino)"));
     if (!rf22.sendtoWait(data, data_size, YAGI_ARDUINO_ADDRESS))
@@ -82,20 +81,11 @@ void enviar(uint8_t data[], int data_size) {
         Serial.println(F("sendtoWait failed (Earth station)"));
 }
 /**
- * Se espera que llege un mensaje con esta direccion de parte
- * del cliente y luego se reenvia.
+ * The packet is encoded transforming data type from double or uint32_t to
+ * uint8_t for compatibility with the transceiver. In order to not loose
+ * infromation, the decimal numbers are multiplied with a factor and separated
+ * in 4 different octets.
  */
-void recibir() {
-    if (rf22.available()) {
-        len = sizeof(buf);
-        if (rf22.recvfromAck(buf, &len, &from)) {
-            Serial.print("\n");
-            if (!rf22.sendtoWait(buf, len, from)) {
-                Serial.println(F("sendtoWait failed"));
-            }
-        }
-    }
-}
 void encodePacket() {
     if (gps.location.isValid()) {
         lttd = gps.location.lat()*1000000;
