@@ -8,10 +8,10 @@
 static const int SDN = 10;
 uint8_t data[RH_RF22_MAX_MESSAGE_LEN];
 
-// Singleton instance of the radio driver
+// Singleton instance of the radio driver.
 RH_RF22 driver(4,2);
 
-// Class to manage message delivery and receipt, using the driver declared above
+// Class to manage message delivery and receipt, using the driver declared above.
 RHReliableDatagram rf22(driver, CLIENT_ADDRESS);
 
 void setup() {
