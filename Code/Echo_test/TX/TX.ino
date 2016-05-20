@@ -5,46 +5,44 @@
 #define CLIENT_ADDRESS 1
 #define SERVER_ADDRESS 2
 
-// Instancia singleton del driver de la radio.
-RH_RF22 driver(4,2);
-
-// La clase que maneja el envio y recibo de mensajes, usando el driver
-// declarado arriba.
-RHReliableDatagram rf22(driver, CLIENT_ADDRESS);
-
+static const int SDN = 10;
 uint8_t data[RH_RF22_MAX_MESSAGE_LEN];
 uint8_t buf[RH_RF22_MAX_MESSAGE_LEN]; 
 uint8_t randomData[10][255];
 int i, j, k, counter, aciertos, msn_size, aciertosTotales, msgsTotales;
 
+// Singleton instance of the radio driver.
+RH_RF22 driver(4,2);
+
+// Class to manage message delivery and receipt, using the driver declared above.
+RHReliableDatagram rf22(driver, CLIENT_ADDRESS);
+
 /**
- * Se inicializa el transceiver y se selecciona el flag, la frecuencia,
- * y el CRC.
+ * The transceiver is initialized and some parameters are selected,
  */
 void setup() {
-    SerialUSB.begin(38400);
-    pinMode(10, OUTPUT);
-    digitalWrite(10, LOW);
+    Serial.begin(115200);
+    pinMode(SDN, OUTPUT);
+    digitalWrite(SDN, LOW);
+    delay(1500);
+    if (!rf22.init()) {
+        Serial.println("Fallo la inicializacion");
+    }
+    Serial.println("Echo test (TX)");
     driver.setCRCPolynomial(driver.CRC_CCITT);
-    if (!rf22.init())
-        SerialUSB.println("Fallo la inicializacion");
-
     driver.setHeaderFlags(0x7E); 
     driver.setFrequency(433.0, 0.05); 
-    
-    delay(2000);
+
     aciertosTotales = 0;
-    
-    SerialUSB.println("Communication test");
 
-    SerialUSB.println("Set configuration = FSK_Rb2Fd5");
+    Serial.println("Set configuration = FSK_Rb2Fd5");
  
-    fixedPowerTest();    
+    Test();    
 
-    SerialUSB.print("\n Aciertos totales: ");
-    SerialUSB.print(aciertosTotales);
-    SerialUSB.print(" de ");
-    SerialUSB.print(k*10);
+    Serial.print("\n Aciertos totales: ");
+    Serial.print(aciertosTotales);
+    Serial.print(" de ");
+    Serial.print(k*10);
     
 } 
 
@@ -73,10 +71,10 @@ void generateRandomData() {
  * exitosamente e imprime cuantos de los enviados hasta ese
  * momento han llegado.
  */
-void fixedPowerTest() {
+void Test() {
     rf22.setRetries(3);
     driver.setTxPower(RH_RF22_TXPOW_20DBM);    
-    SerialUSB.println("Set Tx Power = RH_RF22_TXPOW_20DB");
+    Serial.println("Set Tx Power = RH_RF22_TXPOW_20DB");
     if (driver.setModemConfig(driver.FSK_Rb2Fd5)) { 
         for (k = 0; k < 100; k++) {
             generateRandomData();
@@ -88,21 +86,21 @@ void fixedPowerTest() {
             }
             msgsTotales += 10;
             aciertosTotales += aciertos; 
-            SerialUSB.print("   Aciertos: ");
-            SerialUSB.print(aciertos);
-            SerialUSB.print(" de ");
-            SerialUSB.print(i);
-            SerialUSB.print("       Aciertos parciales: ");
-            SerialUSB.print(aciertosTotales);
-            SerialUSB.print(" de ");
-            SerialUSB.println(msgsTotales);
-            SerialUSB.print("\n");  
+            Serial.print("   Aciertos: ");
+            Serial.print(aciertos);
+            Serial.print(" de ");
+            Serial.print(i);
+            Serial.print("       Aciertos parciales: ");
+            Serial.print(aciertosTotales);
+            Serial.print(" de ");
+            Serial.println(msgsTotales);
+            Serial.print("\n");  
             aciertos = 0; 
         }   
         
     }
     else {
-        SerialUSB.println("Error de configuracion");
+        Serial.println("Error de configuracion");
     }
 }
 /**
@@ -128,10 +126,10 @@ void enviar(uint8_t data[], int data_size) {
 
         }
         else {
-            SerialUSB.println("Fallo el eco");
+            Serial.println("Fallo el eco");
         }
     }
     else {
-      SerialUSB.println("Fallo la confirmacion");
+      Serial.println("Fallo la confirmacion");
     }
 }

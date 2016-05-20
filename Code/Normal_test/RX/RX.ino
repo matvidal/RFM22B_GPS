@@ -10,17 +10,17 @@ uint8_t data[RH_RF22_MAX_MESSAGE_LEN];
 uint8_t from;
 uint8_t len;
 
-// Singleton instance of the radio driver
+// Singleton instance of the radio driver.
 RH_RF22 driver(4,2);
 
-// Class to manage message delivery and receipt, using the driver declared above
+// Class to manage message delivery and receipt, using the driver declared above.
 RHReliableDatagram rf22(driver, SERVER_ADDRESS);
 
 void setup() {
     Serial.begin(115200);
     pinMode(SDN, OUTPUT);
     digitalWrite(SDN, LOW);
-    delay(2000);
+    delay(1500);
     if (!rf22.init()) {
         Serial.println(F("Initialization failed"));
     }
