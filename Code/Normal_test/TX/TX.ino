@@ -18,7 +18,7 @@ void setup() {
     Serial.begin(115200);
     pinMode(SDN, OUTPUT);
     digitalWrite(SDN, LOW);
-    delay(2000);
+    delay(1500);
     if (!rf22.init()) {
         Serial.println(F("Initialization failed"));
     }
