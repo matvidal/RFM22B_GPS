@@ -1,0 +1,73 @@
+Cmp-Mod V01 Created by CvPcb (25-Oct-2014 BZR 4029)-stable date = lun 09 nov 2015 15:23:42 CLT
+
+BeginCmp
+TimeStamp = /563CCE92;
+Reference = C1;
+ValeurCmp = C;
+IdModule  = DPAK2;
+EndCmp
+
+BeginCmp
+TimeStamp = /563CCE9E;
+Reference = C2;
+ValeurCmp = C;
+IdModule  = C2;
+EndCmp
+
+BeginCmp
+TimeStamp = /563CCE98;
+Reference = C3;
+ValeurCmp = C;
+IdModule  = C1;
+EndCmp
+
+BeginCmp
+TimeStamp = /563CCEA4;
+Reference = C4;
+ValeurCmp = C;
+IdModule  = C1;
+EndCmp
+
+BeginCmp
+TimeStamp = /563CC68E;
+Reference = communicationShield1;
+ValeurCmp = ARDUINO_DUE_SHIELD;
+IdModule  = FT:ARDUINO_DUE_SHIELD;
+EndCmp
+
+BeginCmp
+TimeStamp = /563CC7B4;
+Reference = Left_In1;
+ValeurCmp = CONN_01X08;
+IdModule  = ;
+EndCmp
+
+BeginCmp
+TimeStamp = /563CC7C3;
+Reference = Right_In1;
+ValeurCmp = CONN_01X08;
+IdModule  = ;
+EndCmp
+
+BeginCmp
+TimeStamp = /563CCD11;
+Reference = U1;
+ValeurCmp = LM7809CT;
+IdModule  = TO220_VERT;
+EndCmp
+
+BeginCmp
+TimeStamp = /563CCE4E;
+Reference = U2;
+ValeurCmp = NCP1117ST33T3G;
+IdModule  = DPAK2;
+EndCmp
+
+BeginCmp
+TimeStamp = /563CC9FB;
+Reference = Vin1;
+ValeurCmp = CONN_2;
+IdModule  = AK300-2;
+EndCmp
+
+EndListe
