@@ -169,7 +169,13 @@ void displayInfo() {
     Serial.print(F("   Elevation: "));
     Serial.println(elevation(lat_dbl, lng_dbl, alt_dbl));
 }
-
+/**
+ * Calculates the azimuth angle between the TX and the RX given a fixed position
+ * for the receiver.
+ * @param lat2 The latitude of the transmiter.
+ * @param lon2 The longitude of the transmiter.
+ * @return The azimuth angle in degrees between the TX and the RX.
+ */
 double azimuth(double lat2, double lon2) {
     dlat = (lat2 - stationsLat) * deg2rad;
     dlon = (lon2 - stationsLng) * deg2rad; 
@@ -179,12 +185,26 @@ double azimuth(double lat2, double lon2) {
     }
     return az;
 }
-
+/**
+ * This function calculates the elevation of the transmiter given the altitude of
+ * the receiver.
+ * @param lat2 The latitude of the transmiter.
+ * @param lon2 The longitude of the transmiter.
+ * @param alt The altitude of the transmiter.
+ * @return The elevation angle in degrees of the transmiter with respect to the receiver.
+ */
 double elevation(double lat2, double lon2, double alt) {
     gnd_dist = coord_dist(lat2, lon2);
     return atan((alt - stationsAlt) / gnd_dist) * rad2deg;
 }
-
+/**
+ * Calculates the distance in the ground between the transmiter and the receiver,
+ * with the last one being in a fixed position. This function also takes into 
+ * consideration the curvature of the Earth.
+ * @param lat2 The latitude of the transmiter.
+ * @param lon2 The longitude of the transmiter.
+ * @return The distance in meters between TX and RX in the XY plane.
+ */
 double coord_dist(double lat2, double lon2) {
     dlat = (lat2 - stationsLat) * deg2rad;
     dlon = (lon2 - stationsLng) * deg2rad;
@@ -194,4 +214,17 @@ double coord_dist(double lat2, double lon2) {
     c = 2 * atan2(sqrt(a), sqrt(1 - a));
     d = 6371 * c;
     return d *1000;
+}
+/**
+ * Calculates the distance between the transmiter and the receiver, considering the altitudes
+ * and the coordinates. The receiver must be in a fixed position.
+ * @param lat2 The latitude of the transmiter.
+ * @param lon2 The longitude of the transmiter.
+ * @param alt The altitude of the transmiter.
+ * @return The distance in meters between TX and RX in the space.
+ */
+double realDistance(double lat2, double lon2, double alt) {
+    gnd_dist = coord_dist(lat2, lon2);
+    z_dist = alt - stationsAlt;
+    return sqrt((z_dist * z_dist) + (gnd_dist * gnd_dist));
 }

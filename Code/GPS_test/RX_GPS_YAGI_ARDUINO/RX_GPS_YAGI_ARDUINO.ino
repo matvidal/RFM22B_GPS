@@ -6,6 +6,12 @@
 #define YAGI_ARDUINO_ADDRESS 3
 
 static const int SDN = 3;
+static const double stationsLat = -33.458155;
+static const double stationsLng = -70.661971;
+static const double stationsAlt = 548.0;
+static const double deg2rad = 0.0174532925199433; //PI/180;
+static const double rad2deg = 57.295779513082321; //180/PI;
+static const double cos_stationsLat = 0.834289; //cos(stationsLat * deg2rad);
 uint8_t hh;
 uint8_t mm;
 uint8_t ss;
@@ -19,6 +25,13 @@ double lng_dbl;
 double alt_dbl;
 double crse_dbl;
 double spd_dbl;
+double gnd_dist;
+double z_dist;
+double dlat;
+double dlon;
+double haversin_dlat;
+double haversin_dlon;
+double a, c, d;
 
 // Singleton instance of the radio driver
 RH_RF22 driver(4,2);
@@ -120,8 +133,12 @@ void displayInfo() {
     Serial.print(F(","));
     Serial.print(lng_dbl, 6);
 
-    Serial.print(F("   Altitude(GPS): ")); 
+    Serial.print(F("   Altitude: ")); 
     Serial.print(alt_dbl);
+    Serial.print(F(" [m]"));
+
+    Serial.print(F("   Distance: ")); 
+    Serial.print(realDistance(lat_dbl, lng_dbl, alt_dbl));
     Serial.print(F(" [m]"));
 
     Serial.print(F("   Course: ")); 
@@ -149,4 +166,35 @@ void displayInfo() {
   
     Serial.print(F("   Satellites: ")); 
     Serial.println(sat);
+}
+/**
+ * Calculates the distance in the ground between the transmiter and the receiver,
+ * with the last one being in a fixed position. This function also takes into 
+ * consideration the curvature of the Earth.
+ * @param lat2 The latitude of the transmiter.
+ * @param lon2 The longitude of the transmiter.
+ * @return The distance in meters between TX and RX in the XY plane.
+ */
+double coord_dist(double lat2, double lon2) {
+    dlat = (lat2 - stationsLat) * deg2rad;
+    dlon = (lon2 - stationsLng) * deg2rad;
+    haversin_dlat = sin(dlat / 2.0);
+    haversin_dlon = sin(dlon / 2.0);
+    a = haversin_dlat * haversin_dlat + cos_stationsLat * cos(lat2 * deg2rad) * haversin_dlon * haversin_dlon;
+    c = 2 * atan2(sqrt(a), sqrt(1 - a));
+    d = 6371 * c;
+    return d *1000;
+}
+/**
+ * Calculates the distance between the transmiter and the receiver, considering the altitudes
+ * and the coordinates. The receiver must be in a fixed position.
+ * @param lat2 The latitude of the transmiter.
+ * @param lon2 The longitude of the transmiter.
+ * @param alt The altitude of the transmiter.
+ * @return The distance in meters between TX and RX in the space.
+ */
+double realDistance(double lat2, double lon2, double alt) {
+    gnd_dist = coord_dist(lat2, lon2);
+    z_dist = alt - stationsAlt;
+    return sqrt((z_dist * z_dist) + (gnd_dist * gnd_dist));
 }
