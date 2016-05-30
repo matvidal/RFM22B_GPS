@@ -137,7 +137,7 @@ void displayInfo() {
     Serial.print(alt_dbl);
     Serial.print(F(" [m]"));
 
-    Serial.print(F("   Distance: ")); 
+    Serial.print(F("   Dist: ")); 
     Serial.print(realDistance(lat_dbl, lng_dbl, alt_dbl));
     Serial.print(F(" [m]"));
 
