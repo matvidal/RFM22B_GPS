@@ -25,10 +25,10 @@ double lng_dbl;
 double alt_dbl;
 double crse_dbl;
 double spd_dbl;
-
+double gnd_dist;
+double z_dist;
 double dlat;
 double dlon;
-double gnd_dist;
 double haversin_dlat;
 double haversin_dlon;
 double a, c, d, az;
@@ -137,12 +137,16 @@ void displayInfo() {
     Serial.print(alt_dbl);
     Serial.print(F(" [m]"));
 
+    Serial.print(F("   Dist: ")); 
+    Serial.print(realDistance(lat_dbl, lng_dbl, alt_dbl));
+    Serial.print(F(" [m]"));
+
     Serial.print(F("   Course: ")); 
     Serial.print(crse_dbl);
 
     Serial.print(F("   Speed: ")); 
     Serial.print(spd_dbl);
-    Serial.print(F(" [mph]"));
+    Serial.print(F(" [mps]"));
 
     Serial.print(F("   Time: "));
     if (hh < 10) {
@@ -160,7 +164,7 @@ void displayInfo() {
     }
     Serial.print(ss);
   
-    Serial.print(F("   Satellites: ")); 
+    Serial.print(F("   Sats: ")); 
     Serial.print(sat);
 
     Serial.print(F("   Azimuth: "));

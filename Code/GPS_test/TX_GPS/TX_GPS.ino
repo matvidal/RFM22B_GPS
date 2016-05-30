@@ -117,7 +117,7 @@ void encodePacket() {
         packet[15] = crse;
     }
     if (gps.speed.isValid()) {
-        spd = gps.speed.mph()*1000;
+        spd = gps.speed.mps()*1000;
     
         packet[16] = spd >> 24;
         packet[17] = spd >> 16;

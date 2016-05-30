@@ -146,7 +146,7 @@ void displayInfo() {
 
     Serial.print(F("   Speed: ")); 
     Serial.print(spd_dbl);
-    Serial.print(F(" [mph]"));
+    Serial.print(F(" [mps]"));
 
     Serial.print(F("   Time: "));
     if (hh < 10) {
