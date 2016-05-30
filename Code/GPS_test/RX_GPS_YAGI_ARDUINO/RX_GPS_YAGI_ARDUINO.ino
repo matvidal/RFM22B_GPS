@@ -137,7 +137,7 @@ void displayInfo() {
     Serial.print(alt_dbl);
     Serial.print(F(" [m]"));
 
-    Serial.print(F("   Distance: ")); 
+    Serial.print(F("   Dist: ")); 
     Serial.print(realDistance(lat_dbl, lng_dbl, alt_dbl));
     Serial.print(F(" [m]"));
 
@@ -146,7 +146,7 @@ void displayInfo() {
 
     Serial.print(F("   Speed: ")); 
     Serial.print(spd_dbl);
-    Serial.print(F(" [mph]"));
+    Serial.print(F(" [mps]"));
 
     Serial.print(F("   Time: "));
     if (hh < 10) {
