@@ -1,17 +1,6 @@
-#include <RHReliableDatagram.h>
-#include <SPI.h>
-#include <RH_RF22.h>
+#include "RX.h"
 
-#define RADIOSONDE_ADDRESS 1
-#define YAGI_ARDUINO_ADDRESS 3
-
-static const int SDN = 3;
-static const double stationsLat = -33.458155;
-static const double stationsLng = -70.661971;
-static const double stationsAlt = 555.0;
-static const double deg2rad = 0.0174532925199433; //PI/180;
-static const double rad2deg = 57.295779513082321; //180/PI;
-static const double cos_stationsLat = 0.834289; //cos(stationsLat * deg2rad);
+/*                          Parameters                         */
 uint8_t hh;
 uint8_t mm;
 uint8_t ss;
@@ -31,54 +20,10 @@ double dlat;
 double dlon;
 double haversin_dlat;
 double haversin_dlon;
-double a, c, d, az;
+double a, c, d, az; 
 
-// Singleton instance of the radio driver
-RH_RF22 driver(4,2);
+/*                           Functions                            */
 
-// Class to manage message delivery and receipt, using the driver declared above
-RHReliableDatagram rf22(driver, YAGI_ARDUINO_ADDRESS);
-
-/**
- * The serial communication and the transceiver are initialized. 
- */
-void setup() {
-    Serial.begin(115200);
-    delay(1500);
-    pinMode(SDN, OUTPUT);
-    digitalWrite(SDN, LOW);
-    if (!rf22.init()) {
-        Serial.println(F("Initialization failed"));
-    }
-    Serial.println(F("GPS telemetry receiver  (Arduino with Yagi antenna)"));
-    driver.setCRCPolynomial(driver.CRC_CCITT);
-    driver.setHeaderFlags(0x7E); 
-    driver.setFrequency(437.225, 0.05); 
-    driver.setTxPower(RH_RF22_TXPOW_20DBM);
-    if (!driver.setModemConfig(driver.GFSK_Rb2Fd5)) {
-        Serial.println(F("Configuration error"));    
-    }
-    rf22.setRetries(5);  
-    Serial.println(F("Set Tx Power = RH_RF22_TXPOW_20DB"));
-    Serial.println(F("Set configuration = GFSK_Rb2Fd5"));  
-}
-
-void loop() {  
-    receivePacket();
-}
-
-/**
- * The packet is received and decoded in order to display it's information.
- */
-void receivePacket() {
-    if (rf22.available()) {
-        len = sizeof(packet);
-        if (rf22.recvfromAck(packet, &len, &from)) {
-            decodePacket();
-            displayInfo();
-        }
-    }
-}
 /**
  *  The packet is decoded transforming uint8_t to double if it's necesary
  *  and saving the data in the corresponding variables (latitude, longitude,
@@ -124,6 +69,7 @@ void decodePacket() {
     sat = (sat << 8) + packet[25];
     sat = (sat << 8) + packet[26];
 }
+
 /**
  * Displays the data in a comprehensible way.
  */
@@ -165,13 +111,14 @@ void displayInfo() {
     Serial.print(ss);
   
     Serial.print(F("   Sat: ")); 
-    Serial.println(sat);
+    Serial.print(sat);
 
     Serial.print(F("   Az/El: "));
     Serial.print(azimuth(lat_dbl, lng_dbl), 1);
     Serial.print(F("/"));
     Serial.println(elevation(lat_dbl, lng_dbl, alt_dbl), 1);
 }
+
 /**
  * Calculates the azimuth angle between the TX and the RX given a fixed position
  * for the receiver.
@@ -188,6 +135,7 @@ double azimuth(double lat2, double lon2) {
     }
     return az;
 }
+
 /**
  * This function calculates the elevation of the transmiter given the altitude of
  * the receiver.
@@ -200,6 +148,7 @@ double elevation(double lat2, double lon2, double alt) {
     gnd_dist = coord_dist(lat2, lon2);
     return atan((alt - stationsAlt) / gnd_dist) * rad2deg;
 }
+
 /**
  * Calculates the distance in the ground between the transmiter and the receiver,
  * with the last one being in a fixed position. This function also takes into 
@@ -218,6 +167,7 @@ double coord_dist(double lat2, double lon2) {
     d = 6371 * c;
     return d *1000;
 }
+
 /**
  * Calculates the distance between the transmiter and the receiver, considering the altitudes
  * and the coordinates. The receiver must be in a fixed position.

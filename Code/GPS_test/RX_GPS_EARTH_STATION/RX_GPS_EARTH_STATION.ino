@@ -64,13 +64,13 @@ void setup() {
 }
 
 void loop() {  
-    recibir();
+    receivePacket();
 }
 
 /**
  * The packet is received and decoded in order to display it's information.
  */
-void recibir() {
+void receivePacket() {
     if (rf22.available()) {
         len = sizeof(packet);
         if (rf22.recvfromAck(packet, &len, &from)) {
