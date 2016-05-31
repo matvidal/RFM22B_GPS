@@ -8,7 +8,7 @@
 static const int SDN = 10;
 static const double stationsLat = -33.458155;
 static const double stationsLng = -70.661971;
-static const double stationsAlt = 548.0;
+static const double stationsAlt = 557.0;
 static const double deg2rad = 0.0174532925199433; //PI/180;
 static const double rad2deg = 57.295779513082321; //180/PI;
 static const double cos_stationsLat = 0.834289; //cos(stationsLat * deg2rad);
@@ -128,13 +128,13 @@ void decodePacket() {
  * Displays the data in a comprehensible way.
  */
 void displayInfo() {
-    Serial.print(F("Location: ")); 
+    Serial.print(F("Loc: ")); 
     Serial.print(lat_dbl, 6);
     Serial.print(F(","));
     Serial.print(lng_dbl, 6);
 
-    Serial.print(F("   Altitude: ")); 
-    Serial.print(alt_dbl);
+    Serial.print(F("   Alt: ")); 
+    Serial.print(alt_dbl, 1);
     Serial.print(F(" [m]"));
 
     Serial.print(F("   Dist: ")); 
@@ -164,14 +164,13 @@ void displayInfo() {
     }
     Serial.print(ss);
   
-    Serial.print(F("   Sats: ")); 
+    Serial.print(F("   Sat: ")); 
     Serial.print(sat);
 
-    Serial.print(F("   Azimuth: "));
-    Serial.print(azimuth(lat_dbl, lng_dbl), 4);
-
-    Serial.print(F("   Elevation: "));
-    Serial.println(elevation(lat_dbl, lng_dbl, alt_dbl));
+    Serial.print(F("   Az/El: "));
+    Serial.print(azimuth(lat_dbl, lng_dbl), 1);
+    Serial.print(F("/"));
+    Serial.println(elevation(lat_dbl, lng_dbl, alt_dbl), 1);
 }
 /**
  * Calculates the azimuth angle between the TX and the RX given a fixed position
