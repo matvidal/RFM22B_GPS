@@ -55,12 +55,12 @@ void setup() {
     driver.setHeaderFlags(0x7E); 
     driver.setFrequency(437.225, 0.05); 
     driver.setTxPower(RH_RF22_TXPOW_20DBM);
-    if (!driver.setModemConfig(driver.GFSK_Rb2Fd5)) {
+    if (!driver.setModemConfig(driver.FSK_Rb2Fd5)) {
         Serial.println(F("Configuration error"));    
     }
     rf22.setRetries(5);  
     Serial.println(F("Set Tx Power = RH_RF22_TXPOW_20DB"));
-    Serial.println(F("Set configuration = GFSK_Rb2Fd5"));  
+    Serial.println(F("Set configuration = FSK_Rb2Fd5"));  
 }
 
 void loop() {  
