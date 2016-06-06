@@ -11,9 +11,6 @@
 static const uint32_t GPSBaud = 9600;
 static const int SDN = 10;
 uint8_t packet[27];
-uint8_t buf[RH_RF22_MAX_MESSAGE_LEN]; 
-uint8_t len;
-uint8_t from;
 uint32_t sat;
 int lttd;
 int lgtd;
@@ -48,12 +45,12 @@ void setup() {
     driver.setHeaderFlags(0x7E); 
     driver.setFrequency(437.225, 0.05); 
     driver.setTxPower(RH_RF22_TXPOW_20DBM);
-    if (!driver.setModemConfig(driver.GFSK_Rb2Fd5)) {
+    if (!driver.setModemConfig(driver.FSK_Rb2Fd5)) {
         Serial.println(F("Configuration error"));    
     }
     rf22.setRetries(3);
     Serial.println(F("Set Tx Power = RH_RF22_TXPOW_20DB"));
-    Serial.println(F("Set configuration = GFSK_Rb2Fd5"));  
+    Serial.println(F("Set configuration = FSK_Rb2Fd5"));  
 } 
     
 void loop() { 
