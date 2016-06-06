@@ -15,7 +15,7 @@ RH_RF22 driver(4,2);
 RHReliableDatagram rf22(driver, OMNI_ARDUINO_ADDRESS);
 
 /**
- * The serial communication, the transceiver and the stations parameters are initialized. 
+ * The serial communication, the transceiver and the receiver's parameters are initialized. 
  */
 void setup() {
     Serial.begin(115200);
