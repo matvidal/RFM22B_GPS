@@ -1,4 +1,4 @@
-#include "RX.h"
+#include <RX_GPS.h>
 
 /*                          Parameters                         */
 uint8_t hh;
@@ -9,6 +9,10 @@ uint8_t from;
 uint8_t packet[27];
 uint32_t sat;
 int tmp;
+double stationsLat;
+double stationsLon;
+double stationsAlt;
+double cos_stationsLat;
 double lat_dbl;
 double lng_dbl;
 double alt_dbl;
@@ -23,6 +27,40 @@ double haversin_dlon;
 double a, c, d, az; 
 
 /*                           Functions                            */
+
+/**
+ * Sets the receiver station's latitude.
+ * @param newLat The new latitude of the receiver in degrees.
+ */
+void setStationsLat(double newLat) {
+    stationsLat = newLat;
+}
+
+/**
+ * Sets the receiver station's longitude.
+ * @param newLon The new longitude of the receiver in degrees.
+ */
+void setStationsLon(double newLon) {
+    stationsLon = newLon;
+}
+
+/**
+ * Sets the receiver station's altitude.
+ * @param newAlt The new altitude of the receiver in meters.
+ */
+void setStationsAlt(double newAlt) {
+    stationsAlt = newAlt;
+}
+
+/**
+ * Sets the receiver station's cosine of the station's latitude in
+ * radians. This calculation is made frequently, so it is better to set
+ * this value at the beginning for better performance.
+ * @param newCosLat cos(stationsLat * deg2rad);
+ */
+void setCosStationsLat(double newCosLat){
+    cos_stationsLat = newCosLat;
+}
 
 /**
  *  The packet is decoded transforming uint8_t to double if it's necesary
@@ -128,7 +166,7 @@ void displayInfo() {
  */
 double azimuth(double lat2, double lon2) {
     dlat = (lat2 - stationsLat) * deg2rad;
-    dlon = (lon2 - stationsLng) * deg2rad; 
+    dlon = (lon2 - stationsLon) * deg2rad; 
     az = atan2(dlon, dlat) * rad2deg;
     if(az < 0) {
         az = 360 + az;
@@ -159,7 +197,7 @@ double elevation(double lat2, double lon2, double alt) {
  */
 double coord_dist(double lat2, double lon2) {
     dlat = (lat2 - stationsLat) * deg2rad;
-    dlon = (lon2 - stationsLng) * deg2rad;
+    dlon = (lon2 - stationsLon) * deg2rad;
     haversin_dlat = sin(dlat / 2.0);
     haversin_dlon = sin(dlon / 2.0);
     a = haversin_dlat * haversin_dlat + cos_stationsLat * cos(lat2 * deg2rad) * haversin_dlon * haversin_dlon;

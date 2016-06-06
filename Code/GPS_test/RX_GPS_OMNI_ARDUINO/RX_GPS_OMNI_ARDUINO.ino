@@ -1,7 +1,7 @@
- #include <RHReliableDatagram.h>
+#include <RHReliableDatagram.h>
 #include <SPI.h>
 #include <RH_RF22.h>
-#include "RX.h"
+#include <RX_GPS.h>
 
 #define RADIOSONDE_ADDRESS 1
 #define OMNI_ARDUINO_ADDRESS 2
@@ -15,7 +15,7 @@ RH_RF22 driver(4,2);
 RHReliableDatagram rf22(driver, OMNI_ARDUINO_ADDRESS);
 
 /**
- * The serial communication and the transceiver are initialized. 
+ * The serial communication, the transceiver and the stations parameters are initialized. 
  */
 void setup() {
     Serial.begin(115200);
@@ -36,6 +36,10 @@ void setup() {
     rf22.setRetries(5);  
     Serial.println(F("Set Tx Power = RH_RF22_TXPOW_20DB"));
     Serial.println(F("Set configuration = FSK_Rb2Fd5")); 
+    setStationsLat(-33.458137);
+    setStationsLon(-70.661817);
+    setStationsAlt(555.0);
+    setCosStationsLat(0.834289);//cos(stationsLat * deg2rad);
 }
 
 void loop() {  
@@ -54,4 +58,3 @@ void receivePacket() {
         }
     }
 }
-

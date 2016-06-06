@@ -1,17 +1,13 @@
-#ifndef RX_h
-#define RX_h
+#ifndef RX_GPS_h
+#define RX_GPS_h
 
 #include <RHReliableDatagram.h>
 #include <SPI.h>
 #include <RH_RF22.h>
 
 /*                          Parameters                         */
-static const double stationsLat = -33.458155;
-static const double stationsLng = -70.661971;
-static const double stationsAlt = 557.0;
 static const double deg2rad = 0.0174532925199433; //PI/180;
 static const double rad2deg = 57.295779513082321; //180/PI;
-static const double cos_stationsLat = 0.834289; //cos(stationsLat * deg2rad);
 extern uint8_t hh;
 extern uint8_t mm;
 extern uint8_t ss;
@@ -20,6 +16,10 @@ extern uint8_t from;
 extern uint8_t packet[27];
 extern uint32_t sat;
 extern int tmp;
+extern double stationsLat;
+extern double stationsLon;
+extern double stationsAlt;
+extern double cos_stationsLat;
 extern double lat_dbl;
 extern double lng_dbl;
 extern double alt_dbl;
@@ -34,6 +34,10 @@ extern double haversin_dlon;
 extern double a, c, d, az; 
 
 /*                           Functions                            */
+extern void setStationsLat(double newLat);
+extern void setStationsLon(double newLon);
+extern void setStationsAlt(double newAlt);
+extern void setCosStationsLat(double newCosLat);
 extern void decodePacket();
 extern void displayInfo();
 extern double azimuth(double lat2, double lon2);
