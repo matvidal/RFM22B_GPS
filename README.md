@@ -22,7 +22,7 @@ In this test, one Arduino generates 1000 packets of random data and transmit it 
 The transmiter with the microcontroler and the GPS is transported by a balloon with helium. It transmit the data adquired by the GPS to three different receivers.
 
 ## Doc
-All the datasheets of the components used are in this folder.
+All the datasheets of the components used are in this folder. There is also an .ods file with the results of the radiosonde test.
 
 ## Hardware
 Here there are all the designs of the shields to plug the breakout board of the RFM22B to the Arduino Due, the GPS with the TRX and the arduino and the RFM23BP transceiver to also an Arduino Due.
